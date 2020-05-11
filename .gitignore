@@ -1,0 +1,6 @@
+*.pkl
+*.pt
+*.pyc
+*.save
+__pycache__
+*.tar
