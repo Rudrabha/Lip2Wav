@@ -1,2 +1,2 @@
 # Lip2Wav
-![image](https://drive.google.com/open?id=1iP5gk5N2adIdef5CmdYm_tDVsrkmO4ng)
+![image](final_5eb9669575b87c0013449cc0_57606.gif)
