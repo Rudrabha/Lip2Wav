@@ -36,8 +36,10 @@ if __name__ == "__main__":
     parser.add_argument("--synthesizer_root", type=Path, default="/scratch/cvit/rudra/")
     parser.add_argument("-m", "--models_dir", type=str, default="synthesizer/saved_models/", help=\
         "Path to the output directory that will contain the saved model weights and the logs.")
+
     parser.add_argument("--mode", default="synthesis",
                         help="mode for synthesis of tacotron after training")
+    
     parser.add_argument("--GTA", default="True",
                         help="Ground truth aligned synthesis, defaults to True, only considered "
 							 "in Tacotron synthesis mode")

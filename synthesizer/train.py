@@ -16,20 +16,7 @@ import os
 log = infolog.log
 
 
-def add_embedding_stats(summary_writer, embedding_names, paths_to_meta, checkpoint_path):
-    # Create tensorboard projector
-    config = tf.contrib.tensorboard.plugins.projector.ProjectorConfig()
-    config.model_checkpoint_path = checkpoint_path
-    
-    for embedding_name, path_to_meta in zip(embedding_names, paths_to_meta):
-        # Initialize config
-        embedding = config.embeddings.add()
-        # Specifiy the embedding variable and the metadata
-        embedding.tensor_name = embedding_name
-        embedding.metadata_path = path_to_meta
-    
-    # Project the embeddings to space dimensions for visualization
-    tf.contrib.tensorboard.plugins.projector.visualize_embeddings(summary_writer, config)
+
 
 
 def add_train_stats(model, hparams):
@@ -60,23 +47,6 @@ def add_train_stats(model, hparams):
         return tf.summary.merge_all()
 
 
-def add_eval_stats(summary_writer, step, linear_loss, before_loss, after_loss, stop_token_loss,
-                   loss):
-    values = [
-        tf.Summary.Value(tag="Tacotron_eval_model/eval_stats/eval_before_loss",
-                         simple_value=before_loss),
-        tf.Summary.Value(tag="Tacotron_eval_model/eval_stats/eval_after_loss",
-                         simple_value=after_loss),
-        tf.Summary.Value(tag="Tacotron_eval_model/eval_stats/stop_token_loss",
-                         simple_value=stop_token_loss),
-        tf.Summary.Value(tag="Tacotron_eval_model/eval_stats/eval_loss", simple_value=loss),
-    ]
-    if linear_loss is not None:
-        values.append(tf.Summary.Value(tag="Tacotron_eval_model/eval_stats/eval_linear_loss",
-                                       simple_value=linear_loss))
-    test_summary = tf.Summary(value=values)
-    summary_writer.add_summary(test_summary, step)
-
 
 def time_string():
     return datetime.now().strftime("%Y-%m-%d %H:%M")
@@ -88,11 +58,11 @@ def model_train_mode(args, feeder, hparams, global_step):
         model.initialize(feeder.inputs, feeder.input_lengths, feeder.speaker_embeddings, 
                          feeder.mel_targets, targets_lengths=feeder.targets_lengths, global_step=global_step,
                          is_training=True, split_infos=feeder.split_infos)
-        print ("INITIALIZED")
+        print ("INITIALIZED THE MODEL.....")
         model.add_loss()
-        print ("ADDED LOSS")
+        print ("ADDED LOSS TO THE MODEL.....")
         model.add_optimizer(global_step)
-        print ("ADDED OPTIMIZER")
+        print ("ADDED OPTIMIZER.....")
         stats = add_train_stats(model, hparams)
         return model, stats
 
@@ -143,7 +113,7 @@ def train(log_dir, args, hparams):
     # Set up model:
     global_step = tf.Variable(0, name="global_step", trainable=False)
     model, stats = model_train_mode(args, feeder, hparams, global_step)
-    eval_model = model_test_mode(args, feeder, hparams, global_step)
+    #eval_model = model_test_mode(args, feeder, hparams, global_step)
     
     # Book keeping
     step = 0
@@ -254,18 +224,12 @@ def train(log_dir, args, hparams):
                                                                                       step, loss),
                                           target_spectrogram=target,
                                           max_len=target_length)
-                    # log("Input at step {}: {}".format(step, sequence_to_text(input_seq)))
                 
                 if step % args.embedding_interval == 0 or step == args.tacotron_train_steps or step == 1:
                     # Get current checkpoint state
                     checkpoint_state = tf.train.get_checkpoint_state(save_dir)
                     
-                    # Update Projector
-                    #log("\nSaving Model Character Embeddings visualization..")
-                    #add_embedding_stats(summary_writer, [model.embedding_table.name],
-                    #                   [char_embedding_meta],
-                    #                    checkpoint_state.model_checkpoint_path)
-                    #log("Tacotron Character embeddings have been updated on tensorboard!")
+
             
             log("Tacotron training complete after {} global steps!".format(
                 args.tacotron_train_steps), slack=True)
