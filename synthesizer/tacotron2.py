@@ -55,7 +55,6 @@ class Tacotron2:
         self.targets = targets
         self.split_infos = split_infos
         
-        # log("Loading checkpoint: %s" % checkpoint_path)
         #Memory allocation on the GPUs as needed
         config = tf.ConfigProto()
         config.gpu_options.allow_growth = True
@@ -63,10 +62,11 @@ class Tacotron2:
         
         self.session = tf.Session(config=config)
         self.session.run(tf.global_variables_initializer())
-        
+
         saver = tf.train.Saver()
-        saver.restore(self.session, hparams.eval_ckpt)
-        print ("LOADED MODEL")
+        if checkpoint_path is not None and len(checkpoint_path) > 0:
+            log("Loading checkpoint: %s" % checkpoint_path)
+            saver.restore(self.session, checkpoint_path)
     
     def my_synthesize(self, seqs):
         """

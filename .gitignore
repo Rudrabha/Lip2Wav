@@ -4,3 +4,4 @@
 *.save
 __pycache__
 *.tar
+.vc
