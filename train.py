@@ -16,8 +16,6 @@ def prepare_run(args):
     run_name = args.name
     log_dir = os.path.join(args.models_dir, "logs-{}".format(run_name))
     os.makedirs(log_dir, exist_ok=True)
-    #infolog.init(os.path.join(log_dir, "Terminal_train_log"), run_name, args.slack_url)
-
     all_images = get_image_list('train', args.data_root)
     all_test_images = get_image_list('val', args.data_root)
 
@@ -56,8 +54,7 @@ if __name__ == "__main__":
     parser.add_argument("--tacotron_train_steps", type=int, default=2000000, # Was 100000
                         help="total number of tacotron training steps")
     parser.add_argument("--tf_log_level", type=int, default=1, help="Tensorflow C++ log level.")
-    #parser.add_argument("--slack_url", default=None,
-    #                    help="slack webhook notification destination link")
+
     parser.add_argument("--hparams", default="",
                         help="Hyperparameter overrides as a comma-separated list of name=value "
 							 "pairs")

@@ -58,11 +58,11 @@ def model_train_mode(args, feeder, hparams, global_step):
         model.initialize(feeder.inputs, feeder.input_lengths, feeder.speaker_embeddings, 
                          feeder.mel_targets, targets_lengths=feeder.targets_lengths, global_step=global_step,
                          is_training=True, split_infos=feeder.split_infos)
-        print ("INITIALIZED THE MODEL.....")
+        print ("Model is initialized........")
         model.add_loss()
-        print ("ADDED LOSS TO THE MODEL.....")
+        print ("Loss is added to the model.......")
         model.add_optimizer(global_step)
-        print ("ADDED OPTIMIZER.....")
+        print ("Optimizer is added to the model.......")
         stats = add_train_stats(model, hparams)
         return model, stats
 
@@ -158,7 +158,7 @@ def train(log_dir, args, hparams):
             
             # initializing feeder
             feeder.start_threads(sess)
-            print ("INITIALIZED FEEDER")
+            print ("Feeder is intialized and model is ready to train.......")
             
             # Training loop
             while not coord.should_stop() and step < args.tacotron_train_steps:
