@@ -3,8 +3,9 @@
 *Generate high quality speech from only lip movements*. This code is part of the paper: _Learning Individual Speaking Styles for Accurate Lip to Speech Synthesis_ published at CVPR'20.
 
 [[Paper]]() | [[Project Page]](http://cvit.iiit.ac.in/research/projects/cvit-projects/speaking-by-observing-lip-movements) | [[Demo Video]](https://www.youtube.com/watch?v=HziA-jmlk_4)
-
-![image](images/banner.gif)
+ <p align="center">
+  <img src="images/banner.gif"/></p>
+  
 ----------
 Highlights
 ----------
