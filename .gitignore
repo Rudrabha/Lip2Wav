@@ -4,3 +4,5 @@
 *.save
 __pycache__
 *.tar
+.vc
+.gitattributes

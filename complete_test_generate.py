@@ -7,11 +7,10 @@ from shutil import copy
 from glob import glob
 
 class Generator(object):
-	def __init__(self,
-				synthesizer_weights='synthesizer/saved_models/logs-final/taco_pretrained/'):
+	def __init__(self):
 		super(Generator, self).__init__()
 
-		self.synthesizer = sif.Synthesizer(synthesizer_weights, verbose=False, manual_inference=True)
+		self.synthesizer = sif.Synthesizer(verbose=False)
 
 	def read_window(self, window_fnames):
 		window = []
@@ -49,7 +48,7 @@ class Generator(object):
 		sif.audio.save_wav(wav, outfile, sr=hp.sample_rate)
 
 def get_testlist(data_root):
-	test_images = synthesizer.hparams.get_image_list('test', data_root)
+	test_images = sif.hparams.get_image_list('test', data_root)
 	print('{} hours is available for testing'.format(len(test_images) / (sif.hparams.fps * 3600.)))
 
 	test_vids = {}
@@ -95,7 +94,19 @@ if __name__ == '__main__':
 	parser = argparse.ArgumentParser()
 	parser.add_argument('-d', "--data_root", help="Speaker folder path", required=True)
 	parser.add_argument('-r', "--results_root", help="Speaker folder path", required=True)
+	parser.add_argument('--checkpoint', help="Path to trained checkpoint", required=True)
+	parser.add_argument('--fps', help="FPS for this speaker", required=True)
 	args = parser.parse_args()
+
+
+	## add speaker-specific parameters
+	sif.hparams.add_hparam('fps', int(args.fps))
+    sif.hparams.add_hparam('T', int(args.window_size * hparams.fps))
+    sif.hparams.add_hparam('mel_step_size', int(args.window_size * 80))
+    sif.hparams.set_hparam('eval_ckpt', args.checkpoint)
+    assert (sif.hparams.mel_step_size % sif.hparams.outputs_per_step == 0),\
+    'Mel step size should be a multiple of outputs per step, change either of them to meet this condition'
+    sif.hparams.add_hparam('max_iters', sif.hparams.mel_step_size // sif.hparams.outputs_per_step)
 
 	videos = get_testlist(args.data_root)
 

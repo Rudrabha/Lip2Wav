@@ -209,8 +209,6 @@ hparams = HParams(
     prenet_layers=[256, 256],  # number of layers and number of units of prenet
     decoder_layers=2,  # number of decoder lstm layers
     decoder_lstm_units=1024,  # number of decoder lstm units on each layer
-    max_iters=120,
-    # Max decoder steps during inference (Just for safety from infinite loop cases)
     
     # Residual postnet
     postnet_num_layers=5,  # number of postnet convolutional layers
@@ -316,9 +314,9 @@ hparams = HParams(
     # initial teacher forcing ratio. Relevant if mode="scheduled"
     tacotron_teacher_forcing_final_ratio=0.,
     # final teacher forcing ratio. Relevant if mode="scheduled"
-    tacotron_teacher_forcing_start_decay=29000,
+    tacotron_teacher_forcing_start_decay=20000,
     # starting point of teacher forcing ratio decay. Relevant if mode="scheduled"
-    tacotron_teacher_forcing_decay_steps=100000,
+    tacotron_teacher_forcing_decay_steps=80000,
     # Determines the teacher forcing ratio decay slope. Relevant if mode="scheduled"
     tacotron_teacher_forcing_decay_alpha=0.,
     # teacher forcing ratio decay rate. Relevant if mode="scheduled"
@@ -337,13 +335,10 @@ hparams = HParams(
 
 
     ###Speech synthesis from lips###
-    eval_ckpt="synthesizer/saved_models/logs-final/taco_pretrained/tacotron_model.ckpt-288000",
-    T=90,
+    eval_ckpt="", #example: "synthesizer/saved_models/logs-final/taco_pretrained/tacotron_model.ckpt-288000",
     overlap=15,
     mel_overlap=40,
-    mel_step_size=240,
     img_size=48,
-    fps=30,
 )
 
 
