@@ -32,12 +32,12 @@ We will update links to the pre-trained models in this section very soon.
 Downloading the dataset
 ----------
 
-If you would like to train/test on our Lip2Wav dataset, download it from our [project page](http://cvit.iiit.ac.in/research/projects/cvit-projects/speaking-by-observing-lip-movements). The download will be a small zip file with several `.csv` files containing the YouTube IDs of the videos to create the dataset for each speaker. Assuming the zip file is extracted as follows:
+If you would like to train/test on our Lip2Wav dataset, download it from our [project page](http://cvit.iiit.ac.in/research/projects/cvit-projects/speaking-by-observing-lip-movements). The download will be a small zip file with several `.txt` files containing the YouTube IDs of the videos to create the dataset for each speaker. Assuming the zip file is extracted as follows:
 
 ```
 data_root (Lip2Wav in the below examples)
 ├── agad, chem, hs (list of speaker-specific folders)
-|	├── train.csv, test.csv, val.csv (each will contain YouTube IDs to download)
+|	├── train.txt, test.txt, val.txt (each will contain YouTube IDs to download)
 ```
 
 To download the complete video data for a specific speaker, just run:
@@ -51,7 +51,7 @@ This should create
 ```
 data_root (Lip2Wav in the below examples)
 ├── chem (or any other speaker-specific folder)
-|	├── train.csv, test.csv, val.csv
+|	├── train.txt, test.txt, val.txt
 |	├── videos/		(will contain the full videos)
 |	├── intervals/	(cropped 30s segments of all the videos) 
 ```
