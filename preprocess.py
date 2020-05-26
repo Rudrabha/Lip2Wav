@@ -45,7 +45,7 @@ def process_video_file(vfile, args, gpu_id):
 		frames.append(frame)
 	
 	fulldir = vfile.replace('/intervals/', '/preprocessed/')
-	fulldir = fulldir[:vfile.rfind('.')] # ignore extension
+	fulldir = fulldir[:fulldir.rfind('.')] # ignore extension
 
 	os.makedirs(fulldir, exist_ok=True)
 
