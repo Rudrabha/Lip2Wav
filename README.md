@@ -43,7 +43,8 @@ data_root (Lip2Wav in the below examples)
 To download the complete video data for a specific speaker, just run:
 
 ```bash
-sh download_speaker.sh Lip2Wav/chem
+cd Lip2Wav
+sh download_speaker.sh chem
 ```
 
 This should create
