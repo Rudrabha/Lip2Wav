@@ -3,6 +3,12 @@
 *Generate high quality speech from only lip movements*. This code is part of the paper: _Learning Individual Speaking Styles for Accurate Lip to Speech Synthesis_ published at CVPR'20.
 
 [[Paper]](https://arxiv.org/abs/2005.08209) | [[Project Page]](http://cvit.iiit.ac.in/research/projects/cvit-projects/speaking-by-observing-lip-movements) | [[Demo Video]](https://www.youtube.com/watch?v=HziA-jmlk_4)
+
+[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/learning-individual-speaking-styles-for/lip-to-speech-synthesis-on-lrw)](https://paperswithcode.com/sota/lip-to-speech-synthesis-on-lrw?p=learning-individual-speaking-styles-for) [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/learning-individual-speaking-styles-for/speaker-specific-lip-to-speech-synthesis-on)](https://paperswithcode.com/sota/speaker-specific-lip-to-speech-synthesis-on?p=learning-individual-speaking-styles-for)  [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/learning-individual-speaking-styles-for/speaker-specific-lip-to-speech-synthesis-on-7)](https://paperswithcode.com/sota/speaker-specific-lip-to-speech-synthesis-on-7?p=learning-individual-speaking-styles-for) [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/learning-individual-speaking-styles-for/speaker-specific-lip-to-speech-synthesis-on-6)](https://paperswithcode.com/sota/speaker-specific-lip-to-speech-synthesis-on-6?p=learning-individual-speaking-styles-for) [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/learning-individual-speaking-styles-for/speaker-specific-lip-to-speech-synthesis-on-5)](https://paperswithcode.com/sota/speaker-specific-lip-to-speech-synthesis-on-5?p=learning-individual-speaking-styles-for) [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/learning-individual-speaking-styles-for/speaker-specific-lip-to-speech-synthesis-on-4)](https://paperswithcode.com/sota/speaker-specific-lip-to-speech-synthesis-on-4?p=learning-individual-speaking-styles-for) [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/learning-individual-speaking-styles-for/speaker-specific-lip-to-speech-synthesis-on-1)](https://paperswithcode.com/sota/speaker-specific-lip-to-speech-synthesis-on-1?p=learning-individual-speaking-styles-for) 
+
+
+
+
  <p align="center">
   <img src="images/banner.gif"/></p>
   
