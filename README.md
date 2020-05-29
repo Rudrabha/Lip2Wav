@@ -40,18 +40,20 @@ Getting the weights
 Downloading the dataset
 ----------
 
-If you would like to train/test on our Lip2Wav dataset, download it from our [project page](http://cvit.iiit.ac.in/research/projects/cvit-projects/speaking-by-observing-lip-movements). The download will be a small zip file with several `.csv` files containing the YouTube IDs of the videos to create the dataset for each speaker. Assuming the zip file is extracted as follows:
+<!--If you would like to train/test on our Lip2Wav dataset, download it from our [project page](http://cvit.iiit.ac.in/research/projects/cvit-projects/speaking-by-observing-lip-movements). The download will be a small zip file with several `.csv` files containing the YouTube IDs of the videos to create the dataset for each speaker. Assuming the zip file is extracted as follows:-->
+The dataset is present in the Dataset folder in this repository. The folder `Dataset/chem` contains `.txt` files for the train, val and test sets.
 
 ```
 data_root (Lip2Wav in the below examples)
-├── agad, chem, hs (list of speaker-specific folders)
-|	├── train.csv, test.csv, val.csv (each will contain YouTube IDs to download)
+├── Dataset
+|	├── agad, chem, hs (list of speaker-specific folders)
+|	| ├── train.txt, test.txt, val.txt (each will contain YouTube IDs to download)
 ```
 
 To download the complete video data for a specific speaker, just run:
 
 ```bash
-sh download_speaker.sh Lip2Wav/chem
+sh download_speaker.sh Dataset/chem
 ```
 
 This should create
@@ -68,7 +70,7 @@ data_root (Lip2Wav in the below examples)
 Preprocessing the dataset
 ----------
 ```bash
-python preprocess.py --speaker_root Lip2Wav/chem
+python preprocess.py --speaker_root chem
 ```
 
 Additional options like `batch_size` and number of GPUs to use can also be set.
@@ -77,7 +79,7 @@ Additional options like `batch_size` and number of GPUs to use can also be set.
 Generating for the given test split
 ----------
 ```bash
-python complete_test_generate.py -d Lip2Wav/chem -r Lip2Wav/chem/test_results \
+python complete_test_generate.py -d chem -r chem/test_results \
 --fps 30 --checkpoint <path_to_checkpoint>
 
 #A sample checkpoint_path  can be found in hparams.py alongside the "eval_ckpt" param.
@@ -96,13 +98,13 @@ Calculating the metrics
 ----------
 You can calculate the `PESQ`, `ESTOI` and `STOI` scores for the above generated results using `score.py`:
 ```bash
-python score.py -r Lip2Wav/chem/test_results
+python score.py -r chem/test_results
 ```
 
 Training
 ----------
 ```bash
-python train.py <name_of_run> --data_root Lip2Wav/chem/ -m <checkpoints_folder> --fps 30
+python train.py <name_of_run> --data_root chem/ -m <checkpoints_folder> --fps 30
 ```
 Additional arguments can also be set or passed through `--hparams`, for details: `python train.py -h`
 
