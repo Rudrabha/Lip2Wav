@@ -5,7 +5,13 @@
 [[Paper]](https://arxiv.org/abs/2005.08209) | [[Project Page]](http://cvit.iiit.ac.in/research/projects/cvit-projects/speaking-by-observing-lip-movements) | [[Demo Video]](https://www.youtube.com/watch?v=HziA-jmlk_4)
  <p align="center">
   <img src="images/banner.gif"/></p>
-  
+
+----------
+Recent Updates
+----------
+- Pretrained model for Chemistry lectures is released!
+- Part of the dataset containing the Chemistry lectures is released!
+
 ----------
 Highlights
 ----------
@@ -26,7 +32,9 @@ Prerequisites
 
 Getting the weights
 ----------
-We will update links to the pre-trained models in this section very soon.
+| Speaker  | Link to the model |
+| ------------- | :---------------: |
+| Chemistry  | [Link](https://iiitaphyd-my.sharepoint.com/:f:/g/personal/radrabha_m_research_iiit_ac_in/Eo6wv0MH0YlGn5sgRaPnEkIBUf910oTDNnAf4X7XTqmvFQ?e=u8bhPR)  |
 
 
 Downloading the dataset
