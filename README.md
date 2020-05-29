@@ -61,7 +61,7 @@ This should create
 ```
 data_root (Lip2Wav in the below examples)
 ├── chem (or any other speaker-specific folder)
-|	├── train.csv, test.csv, val.csv
+|	├── train.txt, test.txt, val.txt
 |	├── videos/		(will contain the full videos)
 |	├── intervals/	(cropped 30s segments of all the videos) 
 ```
