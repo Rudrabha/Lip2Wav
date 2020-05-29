@@ -15,11 +15,13 @@ class Synthesizer:
     sample_rate = hparams.sample_rate
     hparams = hparams
     
-    def __init__(self, verbose=True, low_mem=False):
+    def __init__(self, verbose=True, low_mem=False, manual_inference=False):
         """
         Creates a synthesizer ready for inference. The actual model isn't loaded in memory until
         needed or until load() is called.
         
+        :param checkpoints_dir: path to the directory containing the checkpoint file as well as the
+        weight files (.data, .index and .meta files)
         :param verbose: if False, only tensorflow's output will be printed TODO: suppress them too
         :param low_mem: if True, the model will be loaded in a separate process and its resources 
         will be released after each usage. Adds a large overhead, only recommended if your GPU 
@@ -30,15 +32,18 @@ class Synthesizer:
         
         # Prepare the model
         self._model = None  # type: Tacotron2
-        # checkpoint_state = tf.train.get_checkpoint_state(checkpoints_dir)
-        # if checkpoint_state is None:
-        #     raise Exception("Could not find any synthesizer weights under %s" % checkpoints_dir)
-        # self.checkpoint_fpath = checkpoint_state.model_checkpoint_path
+        #checkpoint_state = tf.train.get_checkpoint_state(checkpoints_dir)
+        #if checkpoint_state is None:
+        #    raise Exception("Could not find any synthesizer weights under %s" % checkpoints_dir)
+        #self.checkpoint_fpath = checkpoint_state.model_checkpoint_path
+        #if manual_inference:
+        #    self.checkpoint_fpath = self.checkpoint_fpath.replace('/ssd_scratch/cvit/rudra/SV2TTS/', '')
+        #    self.checkpoint_fpath = self.checkpoint_fpath.replace('logs-', '')
 
-        # if verbose:
-        #     model_name = checkpoints_dir.parent.name.replace("logs-", "")
-        #     step = int(self.checkpoint_fpath[self.checkpoint_fpath.rfind('-') + 1:])
-        #     print("Found synthesizer \"%s\" trained to step %d" % (model_name, step))
+        #if verbose:
+        #    model_name = checkpoints_dir.parent.name.replace("logs-", "")
+        #    step = int(self.checkpoint_fpath[self.checkpoint_fpath.rfind('-') + 1:])
+        #    print("Found synthesizer \"%s\" trained to step %d" % (model_name, step))
      
     def is_loaded(self):
         """
@@ -54,7 +59,7 @@ class Synthesizer:
         if self._low_mem:
             raise Exception("Cannot load the synthesizer permanently in low mem mode")
         tf.reset_default_graph()
-        self._model = Tacotron2(hparams.eval_ckpt, hparams)
+        self._model = Tacotron2(None, hparams)
             
     def synthesize_spectrograms(self, faces, return_alignments=False):
         """

@@ -3,19 +3,11 @@ from glob import glob
 import os, pickle
 
 def get_image_list(split, data_root):
-    filelist = []
-    pkl_file = 'logs/filenames_{}.pkl'.format(split)
-    if os.path.exists(pkl_file):
-        with open(pkl_file, 'rb') as p:
-            filelist = pickle.load(p)
-    else:    
-        with open(os.path.join(data_root, '{}.txt'.format(split))) as vidlist:
-            for vid_id in vidlist:
-                vid_id = vid_id.strip()
-                filelist.extend(list(glob(os.path.join(data_root, 'preprocessed', vid_id, '*/*.jpg'))))
-
-        with open(pkl_file, 'wb') as p:
-            pickle.dump(filelist, p, protocol=pickle.HIGHEST_PROTOCOL)
+    filelist = []   
+    with open(os.path.join(data_root, '{}.txt'.format(split))) as vidlist:
+        for vid_id in vidlist:
+            vid_id = vid_id.strip()
+            filelist.extend(list(glob(os.path.join(data_root, 'preprocessed', vid_id, '*/*.jpg'))))   
     return filelist
 
 # Default hyperparameters
@@ -194,7 +186,7 @@ hparams = HParams(
     #enc_conv_kernel_size=(5,),  # size of encoder convolution filters for each layer
     enc_conv_kernel_size = (5,3,3),
     enc_conv_channels=32,  # number of encoder convolutions filters for each layer
-    encoder_lstm_units=256,  # number of lstm units for each direction (forward and backward)
+    encoder_lstm_units=384,  # number of lstm units for each direction (forward and backward)
     
     # Attention mechanism
     smoothing=False,  # Whether to smooth the attention normalization function
@@ -209,6 +201,8 @@ hparams = HParams(
     prenet_layers=[256, 256],  # number of layers and number of units of prenet
     decoder_layers=2,  # number of decoder lstm layers
     decoder_lstm_units=1024,  # number of decoder lstm units on each layer
+    #max_iters=120,
+    # Max decoder steps during inference (Just for safety from infinite loop cases)
     
     # Residual postnet
     postnet_num_layers=5,  # number of postnet convolutional layers
@@ -257,7 +251,7 @@ hparams = HParams(
     # major slowdowns! Only use when critical!)
     
     # train/test split ratios, mini-batches sizes
-    tacotron_batch_size=20,  # number of training samples on each training steps
+    tacotron_batch_size=24,  # number of training samples on each training steps
     # Tacotron Batch synthesis supports ~16x the training batch size (no gradients during 
     # testing). 
     # Training Tacotron with unmasked paddings makes it aware of them, which makes synthesis times
@@ -314,9 +308,9 @@ hparams = HParams(
     # initial teacher forcing ratio. Relevant if mode="scheduled"
     tacotron_teacher_forcing_final_ratio=0.,
     # final teacher forcing ratio. Relevant if mode="scheduled"
-    tacotron_teacher_forcing_start_decay=20000,
+    tacotron_teacher_forcing_start_decay=29000,
     # starting point of teacher forcing ratio decay. Relevant if mode="scheduled"
-    tacotron_teacher_forcing_decay_steps=80000,
+    tacotron_teacher_forcing_decay_steps=130000,
     # Determines the teacher forcing ratio decay slope. Relevant if mode="scheduled"
     tacotron_teacher_forcing_decay_alpha=0.,
     # teacher forcing ratio decay rate. Relevant if mode="scheduled"
@@ -335,10 +329,13 @@ hparams = HParams(
 
 
     ###Speech synthesis from lips###
-    eval_ckpt="", #example: "synthesizer/saved_models/logs-final/taco_pretrained/tacotron_model.ckpt-288000",
+    eval_ckpt="synthesizer/saved_models/logs-final/taco_pretrained/tacotron_model.ckpt-159000",
+    #T=90,
     overlap=15,
     mel_overlap=40,
-    img_size=48,
+    #mel_step_size=240,
+    img_size=96,
+    #fps=30,
 )
 
 

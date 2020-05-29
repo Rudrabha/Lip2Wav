@@ -25,6 +25,7 @@ for filename in tqdm(all_files):
 	gt_filename = gt_folder.format(os.path.basename(filename))
 	rate, deg = wavfile.read(filename)
 	rate, ref = wavfile.read(gt_filename)
+	if len(ref.shape) > 1: ref = np.mean(ref, axis=1) #raise ValueError('Audio should be a mono band')
 
 	if rate != sr:
 		ref = librosa.resample(ref.astype(np.float32), rate, sr).astype(np.int16)
@@ -34,6 +35,7 @@ for filename in tqdm(all_files):
 	elif len(deg) > len(ref):
 		deg = deg[: ref.shape[0]]
 		x = ref
+	else: x = ref
 
 	total_pesq += pesq(rate, x, deg, 'nb')
 	total_stoi += stoi(x, deg, rate, extended=False)

@@ -25,6 +25,9 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--ngpu', help='Number of GPUs across which to run in parallel', default=1, type=int)
 parser.add_argument('--batch_size', help='Single GPU Face detection batch size', default=16, type=int)
 parser.add_argument("--speaker_root", help="Root folder of Speaker", required=True)
+parser.add_argument("--resize_factor", help="Resize the frames before face detection", default=1, type=int)
+
+
 
 args = parser.parse_args()
 
@@ -42,23 +45,20 @@ def process_video_file(vfile, args, gpu_id):
 		if not still_reading:
 			video_stream.release()
 			break
+		frame = cv2.resize(frame, (frame.shape[1]//args.resize_factor, frame.shape[0]//args.resize_factor))
 		frames.append(frame)
 	
 	fulldir = vfile.replace('/intervals/', '/preprocessed/')
 	fulldir = fulldir[:fulldir.rfind('.')] # ignore extension
 
 	os.makedirs(fulldir, exist_ok=True)
+	#print (fulldir)
 
 	wavpath = path.join(fulldir, 'audio.wav')
 	specpath = path.join(fulldir, 'mels.npz')
 
 	command = template.format(vfile, hp.sample_rate, wavpath)
 	subprocess.call(command, shell=True)
-	
-	wav = audio.load_wav(wavpath, hp.sample_rate)
-	spec = audio.melspectrogram(wav, hp)
-	lspec = audio.linearspectrogram(wav, hp)
-	np.savez_compressed(specpath, spec=spec, lspec=lspec)
 
 	batches = [frames[i:i + args.batch_size] for i in range(0, len(frames), args.batch_size)]
 
@@ -72,11 +72,29 @@ def process_video_file(vfile, args, gpu_id):
 				continue
 
 			cv2.imwrite(path.join(fulldir, '{}.jpg'.format(i)), f[0])
+
+
+def process_audio_file(vfile, args, gpu_id):
+	fulldir = vfile.replace('/intervals/', '/preprocessed/')
+	fulldir = fulldir[:fulldir.rfind('.')] # ignore extension
+
+	os.makedirs(fulldir, exist_ok=True)
+
+	wavpath = path.join(fulldir, 'audio.wav')
+	specpath = path.join(fulldir, 'mels.npz')
+
+	
+	wav = audio.load_wav(wavpath, hp.sample_rate)
+	spec = audio.melspectrogram(wav, hp)
+	lspec = audio.linearspectrogram(wav, hp)
+	np.savez_compressed(specpath, spec=spec, lspec=lspec)
+
 	
 def mp_handler(job):
 	vfile, args, gpu_id = job
 	try:
 		process_video_file(vfile, args, gpu_id)
+		process_audio_file(vfile, args, gpu_id)
 	except KeyboardInterrupt:
 		exit(0)
 	except:

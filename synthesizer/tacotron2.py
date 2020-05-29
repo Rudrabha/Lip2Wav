@@ -12,6 +12,14 @@ class Tacotron2:
     def __init__(self, checkpoint_path, hparams, gta=False, model_name="Tacotron"):
         log("Constructing model: %s" % model_name)
         #Force the batch size to be known in order to use attention masking in batch synthesis
+        '''
+        inputs = tf.placeholder(tf.int32, (None, None), name="inputs")
+        input_lengths = tf.placeholder(tf.int32, (None,), name="input_lengths")
+        speaker_embeddings = tf.placeholder(tf.float32, (None, hparams.speaker_embedding_size),
+                                            name="speaker_embeddings")
+        targets = tf.placeholder(tf.float32, (None, None, hparams.num_mels), name="mel_targets")
+        split_infos = tf.placeholder(tf.int32, shape=(hparams.tacotron_num_gpus, None), name="split_infos")
+        '''
         inputs = tf.placeholder(tf.float32, shape=(None, hparams.T, hparams.img_size, 
                                     hparams.img_size, 3), name="inputs"),
         input_lengths = tf.placeholder(tf.int32, shape=(None,), name="input_lengths"),
@@ -21,7 +29,7 @@ class Tacotron2:
         split_infos = tf.placeholder(tf.int32, shape=(hparams.tacotron_num_gpus, None), 
                name="split_infos"),
 
-        # SV2TTS will be given 0 for single speaker models.
+        # SV2TTS
         speaker_embeddings = tf.placeholder(tf.float32, shape=(None, 256), 
                name="speaker_embeddings")
         with tf.variable_scope("Tacotron_model") as scope:
@@ -55,6 +63,7 @@ class Tacotron2:
         self.targets = targets
         self.split_infos = split_infos
         
+        log("Loading checkpoint: %s" % checkpoint_path)
         #Memory allocation on the GPUs as needed
         config = tf.ConfigProto()
         config.gpu_options.allow_growth = True
@@ -62,11 +71,10 @@ class Tacotron2:
         
         self.session = tf.Session(config=config)
         self.session.run(tf.global_variables_initializer())
-
+        
         saver = tf.train.Saver()
-        if checkpoint_path is not None and len(checkpoint_path) > 0:
-            log("Loading checkpoint: %s" % checkpoint_path)
-            saver.restore(self.session, checkpoint_path)
+        saver.restore(self.session, hparams.eval_ckpt)
+        print ("LOADED MODEL")
     
     def my_synthesize(self, seqs):
         """
@@ -85,12 +93,26 @@ class Tacotron2:
             self.split_infos: np.asarray(split_infos, dtype=np.int32),
         }
         
-
+        '''
+        mels, alignments, stop_tokens = self.session.run(
+            [self.mel_outputs, self.alignments, self.stop_token_prediction],
+            feed_dict=feed_dict)
+        mels, alignments, stop_tokens = list(mels[0]), alignments[0], stop_tokens[0]
+        '''
         mels, alignments = self.session.run(
             [self.mel_outputs, self.alignments],
             feed_dict=feed_dict)
         mels, alignments= list(mels[0]), alignments[0]
-
+        # Trim the output
+        '''
+        for i in range(len(mels)):
+            try:
+                target_length = list(np.round(stop_tokens[i])).index(1)
+                mels[i] = mels[i][:target_length, :]
+            except ValueError:
+                # If no token is generated, we simply do not trim the output
+                continue
+        '''
         
         return [mel.T for mel in mels], alignments
     

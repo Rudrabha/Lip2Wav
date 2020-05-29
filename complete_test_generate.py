@@ -47,10 +47,19 @@ class Generator(object):
 		wav = self.synthesizer.griffin_lim(mel)
 		sif.audio.save_wav(wav, outfile, sr=hp.sample_rate)
 
-def get_testlist(data_root):
-	test_images = sif.hparams.get_image_list('test', data_root)
-	print('{} hours is available for testing'.format(len(test_images) / (sif.hparams.fps * 3600.)))
 
+def get_image_list(split, data_root):
+    filelist = []
+    with open(os.path.join(data_root, '{}.txt'.format(split))) as vidlist:
+        for vid_id in vidlist:
+            vid_id = vid_id.strip()
+            filelist.extend(list(glob(os.path.join(data_root, 'preprocessed', vid_id, '*/*.jpg'))))
+    return filelist
+
+
+def get_testlist(data_root):
+	test_images = get_image_list('test', data_root)
+	print('{} hours is available for testing'.format(len(test_images) / (sif.hparams.fps * 3600.)))
 	test_vids = {}
 	for x in test_images:
 		x = x[:x.rfind('/')]
@@ -96,17 +105,18 @@ if __name__ == '__main__':
 	parser.add_argument('-r', "--results_root", help="Speaker folder path", required=True)
 	parser.add_argument('--checkpoint', help="Path to trained checkpoint", required=True)
 	parser.add_argument('--fps', help="FPS for this speaker", required=True)
+	parser.add_argument('--window_size', help="No of (integer) seconds of context window size", type=int, required=True)
 	args = parser.parse_args()
 
 
 	## add speaker-specific parameters
 	sif.hparams.add_hparam('fps', int(args.fps))
-    sif.hparams.add_hparam('T', int(args.window_size * hparams.fps))
-    sif.hparams.add_hparam('mel_step_size', int(args.window_size * 80))
-    sif.hparams.set_hparam('eval_ckpt', args.checkpoint)
-    assert (sif.hparams.mel_step_size % sif.hparams.outputs_per_step == 0),\
-    'Mel step size should be a multiple of outputs per step, change either of them to meet this condition'
-    sif.hparams.add_hparam('max_iters', sif.hparams.mel_step_size // sif.hparams.outputs_per_step)
+	sif.hparams.add_hparam('T', int(args.window_size * sif.hparams.fps))
+	sif.hparams.add_hparam('mel_step_size', int(args.window_size * 80))
+	sif.hparams.set_hparam('eval_ckpt', args.checkpoint)
+	assert (sif.hparams.mel_step_size % sif.hparams.outputs_per_step == 0),\
+	'Mel step size should be a multiple of outputs per step, change either of them to meet this condition'
+	sif.hparams.add_hparam('max_iters', sif.hparams.mel_step_size // sif.hparams.outputs_per_step)
 
 	videos = get_testlist(args.data_root)
 
@@ -128,7 +138,6 @@ if __name__ == '__main__':
 
 	g = Generator()
 	template = 'ffmpeg -y -loglevel panic -ss {} -i {} -to {} -strict -2 {}'
-
 	for vid in tqdm(videos):
 		vidpath = vid + '/'
 		for (ss, es), images in tqdm(contiguous_window_generator(vidpath)):
@@ -141,7 +150,8 @@ if __name__ == '__main__':
 				g.vc(sample, outfile)
 			except KeyboardInterrupt:
 				exit(0)
-			except:
+			except Exception as e:
+				print(e)
 				continue
 
 			command = template.format(ss, vidpath + 'audio.wav', es, 

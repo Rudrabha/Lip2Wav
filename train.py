@@ -40,7 +40,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("name", help="Name of the run and of the logging directory.")
     parser.add_argument("--data_root", help="Speaker folder path", required=True)
-    parser.add_argument("--fps", help="FPS of the videos for this speaker", required=True)
+    parser.add_argument("--fps", help="FPS of the videos for this speaker", type=int,  required=True)
 
     parser.add_argument("-m", "--models_dir", type=str, default="synthesizer/saved_models/", help=\
         "Path to the output directory that will contain the saved model weights and the logs.")

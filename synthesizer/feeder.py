@@ -106,10 +106,6 @@ class Feeder:
 		thread.daemon = True #Thread will close when parent quits
 		thread.start()
 
-		thread = threading.Thread(name="background", target=self._enqueue_next_test_group)
-		thread.daemon = True #Thread will close when parent quits
-		thread.start()
-
 	def _get_test_groups(self):
 		# print('Getting test group')
 		input_data, mel_target = self.getitem(split='test')
@@ -137,12 +133,10 @@ class Feeder:
 	def _enqueue_next_train_group(self):
 		while not self._coord.should_stop():
 			start = time.time()
-
 			# Read a group of examples
 			n = self._hparams.tacotron_batch_size
 			r = self._hparams.outputs_per_step
 			examples = [self._get_next_example() for i in range(n * _batches_per_group)]
-
 			# Bucket examples based on similar output sequence length for efficiency
 			examples.sort(key=lambda x: x[-1])
 			batches = [examples[i: i+n] for i in range(0, len(examples), n)]
@@ -173,7 +167,6 @@ class Feeder:
 
 			mel = np.load(os.path.join(os.path.dirname(img_name), 'mels.npz'))['spec'].T
 			mel = self.crop_audio_window(mel, img_name)
-
 			if (mel.shape[0] != self._hparams.mel_step_size):
 				idx = np.random.randint(len(self.filelist[split]))
 				continue
@@ -188,15 +181,12 @@ class Feeder:
 				continue
 
 			window.append(img)
-
-        # T x H x W x 3
 		x = np.asarray(window) / 255.
 		return x, mel
 
 	def _get_next_example(self):
 		"""Gets a single example (input, mel_target, token_target, linear_target, mel_length) from_ disk
 		"""
-		# print('Getting train example')
 		input_data, mel_target = self.getitem()
 
 		embed_target = np.zeros([256], dtype=np.float32)
@@ -282,7 +272,6 @@ class Feeder:
 	def get_window(self, center_frame):
 		center_id = self.get_frame_id(center_frame)
 		vidname = dirname(center_frame)
-
 		if self._hparams.T%2:
 			window_ids = range(center_id - self._hparams.T//2, center_id + self._hparams.T//2 + 1)
 		else:
