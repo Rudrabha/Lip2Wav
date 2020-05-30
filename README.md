@@ -9,15 +9,15 @@
 ----------
 Recent Updates
 ----------
-- Pretrained model for Chemistry lectures is released!
-- Part of the dataset containing the Chemistry lectures is released!
+- Dataset and Pretrained model for "Chemistry lectures" speaker is released!
+- More speakers from the Lip2Wav dataset and their models coming soon! Stay tuned!
 
 ----------
 Highlights
 ----------
  - First work to generate intelligible speech from only lip movements in unconstrained settings.
  - Sequence-to-Sequence modelling of the problem.
- - Dataset for 5 speakers containing 100+ hrs of video data made available! [[Project Page]](http://cvit.iiit.ac.in/research/projects/cvit-projects/speaking-by-observing-lip-movements) 
+ - Dataset for 5 speakers containing 100+ hrs of video data made available! [[Dataset folder of this repo]](https://github.com/Rudrabha/Lip2Wav/tree/master/Dataset) 
  - Complete training code and pretrained models made available.
  - Inference code to generate results from the pre-trained models.
  - Code to calculate metrics reported in the paper is also made available.
