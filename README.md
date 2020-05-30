@@ -111,7 +111,18 @@ Additional arguments can also be set or passed through `--hparams`, for details:
 
 License and Citation
 ----------
-The software is licensed under the MIT License. Citation details will be updated.
+The software is licensed under the MIT License. Please cite the following paper if you have use this code:
+```
+@article{Prajwal2020LearningIS,
+  title={Learning Individual Speaking Styles for Accurate Lip to Speech Synthesis},
+  author={K R Prajwal and Rudrabha Mukhopadhyay and Vinay Namboodiri and C. V. Jawahar},
+  journal={ArXiv},
+  year={2020},
+  volume={abs/2005.08209}
+}
+```
+
+
 
 
 Acknowledgements
