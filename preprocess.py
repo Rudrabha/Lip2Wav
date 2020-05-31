@@ -26,7 +26,7 @@ parser.add_argument('--ngpu', help='Number of GPUs across which to run in parall
 parser.add_argument('--batch_size', help='Single GPU Face detection batch size', default=16, type=int)
 parser.add_argument("--speaker_root", help="Root folder of Speaker", required=True)
 parser.add_argument("--resize_factor", help="Resize the frames before face detection", default=1, type=int)
-
+parser.add_argument("--speaker", help="Helps in preprocessing", default="chem", choices=["chem", "agad", "hs", "mk", "eh"])
 
 
 args = parser.parse_args()
@@ -35,6 +35,17 @@ fa = [face_detection.FaceAlignment(face_detection.LandmarksType._2D, flip_input=
 									device='cuda:{}'.format(id)) for id in range(args.ngpu)]
 
 template = 'ffmpeg -loglevel panic -y -i {} -ar {} -f wav {}'
+
+def crop_frame(frame, args):
+	if args.speaker == "chem":
+		return frame
+	elif args.speaker == "agad":
+		return frame[270:460, 770:1130]
+	elif args.speaker == "hs" or args.speaker == "mk" or args.speaker == "eh":
+		return  frame[int(frame.shape[0]*3/4):, int(frame.shape[1]*3/4): ]
+	else:
+		print ("Unknown speaker!")
+		exit()
 
 def process_video_file(vfile, args, gpu_id):
 	video_stream = cv2.VideoCapture(vfile)
@@ -45,6 +56,7 @@ def process_video_file(vfile, args, gpu_id):
 		if not still_reading:
 			video_stream.release()
 			break
+		frame = crop_frame(frame, args)
 		frame = cv2.resize(frame, (frame.shape[1]//args.resize_factor, frame.shape[0]//args.resize_factor))
 		frames.append(frame)
 	
