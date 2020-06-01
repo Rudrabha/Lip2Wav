@@ -10,6 +10,7 @@
 Recent Updates
 ----------
 - Dataset and Pretrained model for "Chemistry lectures" speaker is released!
+- Dataset and Pretrained model for "Chess commentary" speaker is released!
 - More speakers from the Lip2Wav dataset and their models coming soon! Stay tuned!
 
 ----------
@@ -35,7 +36,7 @@ Getting the weights
 | Speaker  | Link to the model |
 | ------------- | :---------------: |
 | Chemistry  | [Link](https://iiitaphyd-my.sharepoint.com/:f:/g/personal/radrabha_m_research_iiit_ac_in/EgQbOxQI5UBDg3Atmobk834BgMaJBQqeEIvJMu-t7x0sOQ?e=qAYkG1)  |
-
+| Chess Commentary  | [Link](https://iiitaphyd-my.sharepoint.com/:f:/g/personal/radrabha_m_research_iiit_ac_in/EsvTmlPa6ddLq7IE6s-WcAcBGQEL2UvMrXnoKIVCXcHcZg?e=41KJvA)  |
 
 Downloading the dataset
 ----------
