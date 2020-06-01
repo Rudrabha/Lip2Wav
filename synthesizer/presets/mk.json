@@ -1,0 +1,24 @@
+{
+	"speaker" : "mk",
+
+	"enc_conv_num_layers" : 3,
+	"enc_conv_kernel_size" : [5,3,3],
+	"enc_conv_channels" : 32,
+	"encoder_lstm_units" : 256,
+    "enc_conv_num_blocks" : 4,
+    "num_init_filters" : 32,
+
+	"prenet_layers" : [256, 256],
+	"decoder_layers" : 2,
+	"decoder_lstm_units" : 256,
+
+    "tacotron_teacher_forcing_start_decay" : 29000,
+    "tacotron_teacher_forcing_decay_steps" : 100000,
+
+    "T" : 75,
+    "overlap" : 15,
+    "mel_overlap" : 48,
+    "mel_step_size" : 240,
+    "img_size" : 48,
+    "fps" : 25
+}
