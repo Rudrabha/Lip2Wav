@@ -49,12 +49,12 @@ class Generator(object):
 
 
 def get_image_list(split, data_root):
-    filelist = []
-    with open(os.path.join(data_root, '{}.txt'.format(split))) as vidlist:
-        for vid_id in vidlist:
-            vid_id = vid_id.strip()
-            filelist.extend(list(glob(os.path.join(data_root, 'preprocessed', vid_id, '*/*.jpg'))))
-    return filelist
+	filelist = []
+	with open(os.path.join(data_root, '{}.txt'.format(split))) as vidlist:
+		for vid_id in vidlist:
+			vid_id = vid_id.strip()
+			filelist.extend(list(glob(os.path.join(data_root, 'preprocessed', vid_id, '*/*.jpg'))))
+	return filelist
 
 
 def get_testlist(data_root):
@@ -104,20 +104,16 @@ if __name__ == '__main__':
 	parser.add_argument('-d', "--data_root", help="Speaker folder path", required=True)
 	parser.add_argument('-r', "--results_root", help="Speaker folder path", required=True)
 	parser.add_argument('--checkpoint', help="Path to trained checkpoint", required=True)
-	parser.add_argument('--fps', help="FPS for this speaker", required=True)
-	parser.add_argument('--window_size', help="No of (integer) seconds of context window size", type=int, required=True)
+	parser.add_argument("--preset", help="Speaker-specific hyper-params", type=str, required=True)
 	args = parser.parse_args()
 
 
 	## add speaker-specific parameters
-	sif.hparams.add_hparam('fps', int(args.fps))
-	sif.hparams.add_hparam('T', int(args.window_size * sif.hparams.fps))
-	sif.hparams.add_hparam('mel_step_size', int(args.window_size * 80))
-	sif.hparams.set_hparam('eval_ckpt', args.checkpoint)
-	assert (sif.hparams.mel_step_size % sif.hparams.outputs_per_step == 0),\
-	'Mel step size should be a multiple of outputs per step, change either of them to meet this condition'
-	sif.hparams.add_hparam('max_iters', sif.hparams.mel_step_size // sif.hparams.outputs_per_step)
+	with open(args.preset) as f:
+		sif.hparams.parse_json(f.read())
 
+	sif.hparams.set_hparam('eval_ckpt', args.checkpoint)
+	
 	videos = get_testlist(args.data_root)
 
 	if not os.path.isdir(args.results_root):

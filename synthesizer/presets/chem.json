@@ -1,0 +1,34 @@
+{
+	"speaker" : "chem",
+
+	"enc_conv_num_layers" : 3,
+	"enc_conv_kernel_size" : [5,3,3],
+	"enc_conv_channels" : 32,
+	"encoder_lstm_units" : 384,
+
+	"prenet_layers" : [256, 256],
+	"decoder_layers" : 2,
+	"decoder_lstm_units" : 1024,
+
+	"postnet_num_layers" : 5,
+    "postnet_channels" : 512,
+
+    "cbhg_kernels" : 8,
+    "cbhg_conv_channels" : 128, 
+    "cbhg_projection" : 256,
+    "cbhg_highwaynet_layers" : 4,
+    "cbhg_highway_units" : 128, 
+    "cbhg_rnn_units" : 128,
+
+    "tacotron_teacher_forcing_start_decay" : 29000,
+    "tacotron_teacher_forcing_decay_steps" : 130000,
+
+    "T" : 90,
+    "overlap" : 15,
+    "mel_overlap" : 40,
+    "mel_step_size" : 240,
+    "img_size" : 96,
+    "fps" : 30,
+
+    "max_iters" : 120
+}

@@ -11,7 +11,6 @@ import os
 
 #Prepares the data.
 def prepare_run(args):
-    modified_hp = hparams.parse(args.hparams)
     os.environ["TF_CPP_MIN_LOG_LEVEL"] = str(args.tf_log_level)
     run_name = args.name
     log_dir = os.path.join(args.models_dir, "logs-{}".format(run_name))
@@ -19,28 +18,19 @@ def prepare_run(args):
     all_images = get_image_list('train', args.data_root)
     all_test_images = get_image_list('val', args.data_root)
 
-    modified_hp.add_hparam('all_images', all_images)
-    modified_hp.add_hparam('all_test_images', all_test_images)
+    hparams.add_hparam('all_images', all_images)
+    hparams.add_hparam('all_test_images', all_test_images)
 
-    ## add speaker-specific parameters
-    modified_hp.add_hparam('fps', int(args.fps))
-    modified_hp.add_hparam('T', int(args.window_size * args.fps))
-    modified_hp.add_hparam('mel_step_size', int(args.window_size * 80))
-    assert (modified_hp.mel_step_size % modified_hp.outputs_per_step == 0),\
-    'Mel step size should be a multiple of outputs per step, change either of them to meet this condition'
+    print('Training on {} hours'.format(len(all_images) / (3600. * hparams.fps)))
+    print('Validating on {} hours'.format(len(all_test_images) / (3600. * hparams.fps)))
 
-    modified_hp.add_hparam('max_iters', modified_hp.mel_step_size // modified_hp.outputs_per_step)
-
-    print('Training on {} hours'.format(len(all_images) / (3600. * modified_hp.fps)))
-    print('Validating on {} hours'.format(len(all_test_images) / (3600. * modified_hp.fps)))
-
-    return log_dir, modified_hp
+    return log_dir, hparams
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("name", help="Name of the run and of the logging directory.")
     parser.add_argument("--data_root", help="Speaker folder path", required=True)
-    parser.add_argument("--fps", help="FPS of the videos for this speaker", type=int,  required=True)
+    parser.add_argument("--preset", help="Speaker-specific hyper-params", type=str, required=True)
 
     parser.add_argument("-m", "--models_dir", type=str, default="synthesizer/saved_models/", help=\
         "Path to the output directory that will contain the saved model weights and the logs.")
@@ -65,14 +55,12 @@ if __name__ == "__main__":
                         help="total number of tacotron training steps")
     parser.add_argument("--tf_log_level", type=int, default=1, help="Tensorflow C++ log level.")
 
-    parser.add_argument("--hparams", default="",
-                        help="Hyperparameter overrides as a comma-separated list of name=value "
-							 "pairs")
-    parser.add_argument("--window_size", default=3, type=int, help="Number of (integer) seconds of context window size")
-
     args = parser.parse_args()
     print_args(args, parser)
     
     log_dir, hparams = prepare_run(args)
     
+    with open(args.preset) as f:
+        hparams.parse_json(f.read())
+
     tacotron_train(args, log_dir, hparams)

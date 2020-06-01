@@ -184,7 +184,7 @@ hparams = HParams(
     # Encoder parameters
     enc_conv_num_layers=3,  # number of encoder convolutional layers
     #enc_conv_kernel_size=(5,),  # size of encoder convolution filters for each layer
-    enc_conv_kernel_size = (5,3,3),
+    enc_conv_kernel_size = [5,3,3],
     enc_conv_channels=32,  # number of encoder convolutions filters for each layer
     encoder_lstm_units=384,  # number of lstm units for each direction (forward and backward)
     
@@ -201,7 +201,7 @@ hparams = HParams(
     prenet_layers=[256, 256],  # number of layers and number of units of prenet
     decoder_layers=2,  # number of decoder lstm layers
     decoder_lstm_units=1024,  # number of decoder lstm units on each layer
-    #max_iters=120,
+    max_iters=120,
     # Max decoder steps during inference (Just for safety from infinite loop cases)
     
     # Residual postnet
@@ -330,12 +330,14 @@ hparams = HParams(
 
     ###Speech synthesis from lips###
     eval_ckpt="synthesizer/saved_models/logs-final/taco_pretrained/tacotron_model.ckpt-159000",
-    #T=90,
+    
+    speaker="unset",
+    T=90,
     overlap=15,
     mel_overlap=40,
-    #mel_step_size=240,
+    mel_step_size=240,
     img_size=96,
-    #fps=30,
+    fps=30,
 )
 
 

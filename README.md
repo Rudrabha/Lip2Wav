@@ -59,7 +59,7 @@ sh download_speaker.sh Dataset/chem
 This should create
 
 ```
-data_root (Lip2Wav in the below examples)
+Dataset
 ├── chem (or any other speaker-specific folder)
 |	├── train.txt, test.txt, val.txt
 |	├── videos/		(will contain the full videos)
@@ -70,7 +70,7 @@ data_root (Lip2Wav in the below examples)
 Preprocessing the dataset
 ----------
 ```bash
-python preprocess.py --speaker_root chem
+python preprocess.py --speaker_root Dataset/chem --speaker chem
 ```
 
 Additional options like `batch_size` and number of GPUs to use can also be set.
@@ -79,15 +79,15 @@ Additional options like `batch_size` and number of GPUs to use can also be set.
 Generating for the given test split
 ----------
 ```bash
-python complete_test_generate.py -d chem -r chem/test_results \
---fps 30 --checkpoint <path_to_checkpoint>
+python complete_test_generate.py -d Dataset/chem -r Dataset/chem/test_results \
+--preset synthesizer/prests/chem.json --checkpoint <path_to_checkpoint>
 
 #A sample checkpoint_path  can be found in hparams.py alongside the "eval_ckpt" param.
 ```
 
 This will create:
 ```
-results_root (Lip2Wav/chem/test_results/ in the above example)
+Dataset/chem/test_results
 ├── gts/  (cropped ground-truth audio files)
 |	├── *.wav
 ├── wavs/ (generated audio files)
@@ -98,13 +98,13 @@ Calculating the metrics
 ----------
 You can calculate the `PESQ`, `ESTOI` and `STOI` scores for the above generated results using `score.py`:
 ```bash
-python score.py -r chem/test_results
+python score.py -r Dataset/chem/test_results
 ```
 
 Training
 ----------
 ```bash
-python train.py <name_of_run> --data_root chem/ -m <checkpoints_folder> --fps 30
+python train.py <name_of_run> --data_root Dataset/chem/ --preset synthesizer/prests/chem.json
 ```
 Additional arguments can also be set or passed through `--hparams`, for details: `python train.py -h`
 
@@ -121,8 +121,6 @@ The software is licensed under the MIT License. Please cite the following paper 
   volume={abs/2005.08209}
 }
 ```
-
-
 
 
 Acknowledgements
