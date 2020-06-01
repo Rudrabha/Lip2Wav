@@ -34,7 +34,7 @@ Getting the weights
 ----------
 | Speaker  | Link to the model |
 | ------------- | :---------------: |
-| Chemistry  | [Link](https://iiitaphyd-my.sharepoint.com/:f:/g/personal/radrabha_m_research_iiit_ac_in/Eo6wv0MH0YlGn5sgRaPnEkIBUf910oTDNnAf4X7XTqmvFQ?e=u8bhPR)  |
+| Chemistry  | [Link](https://iiitaphyd-my.sharepoint.com/:f:/g/personal/radrabha_m_research_iiit_ac_in/EgQbOxQI5UBDg3Atmobk834BgMaJBQqeEIvJMu-t7x0sOQ?e=qAYkG1)  |
 
 
 Downloading the dataset
