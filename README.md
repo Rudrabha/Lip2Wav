@@ -35,8 +35,9 @@ Getting the weights
 ----------
 | Speaker  | Link to the model |
 | :-------------: | :---------------: |
-| Chemistry  | [Link](https://iiitaphyd-my.sharepoint.com/:f:/g/personal/radrabha_m_research_iiit_ac_in/EgQbOxQI5UBDg3Atmobk834BgMaJBQqeEIvJMu-t7x0sOQ?e=qAYkG1)  |
+| Chemistry Lectures  | [Link](https://iiitaphyd-my.sharepoint.com/:f:/g/personal/radrabha_m_research_iiit_ac_in/EgQbOxQI5UBDg3Atmobk834BgMaJBQqeEIvJMu-t7x0sOQ?e=qAYkG1)  |
 | Chess Commentary  | [Link](https://iiitaphyd-my.sharepoint.com/:f:/g/personal/radrabha_m_research_iiit_ac_in/EsvTmlPa6ddLq7IE6s-WcAcBGQEL2UvMrXnoKIVCXcHcZg?e=41KJvA)  |
+| Deep-learning Lectures  | [Link](https://iiitaphyd-my.sharepoint.com/:f:/g/personal/radrabha_m_research_iiit_ac_in/Em8SFMi6YcdIjtnNJmG_UEcBsdT4PqvYUAwFilNmtqOQ1A?e=E7hMG2)  |
 
 Downloading the dataset
 ----------
@@ -47,7 +48,7 @@ The dataset is present in the Dataset folder in this repository. The folder `Dat
 ```
 data_root (Lip2Wav in the below examples)
 ├── Dataset
-|	├── chess, chem, hs (list of speaker-specific folders)
+|	├── chess, chem, dl (list of speaker-specific folders)
 |	|    ├── train.txt, test.txt, val.txt (each will contain YouTube IDs to download)
 ```
 
