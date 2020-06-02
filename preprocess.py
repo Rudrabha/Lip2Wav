@@ -26,7 +26,7 @@ parser.add_argument('--ngpu', help='Number of GPUs across which to run in parall
 parser.add_argument('--batch_size', help='Single GPU Face detection batch size', default=16, type=int)
 parser.add_argument("--speaker_root", help="Root folder of Speaker", required=True)
 parser.add_argument("--resize_factor", help="Resize the frames before face detection", default=1, type=int)
-parser.add_argument("--speaker", help="Helps in preprocessing", required=True, choices=["chem", "agad", "hs", "mk", "eh"])
+parser.add_argument("--speaker", help="Helps in preprocessing", required=True, choices=["chem", "chess", "hs", "mk", "eh"])
 
 
 args = parser.parse_args()
@@ -39,7 +39,7 @@ template = 'ffmpeg -loglevel panic -y -i {} -ar {} -f wav {}'
 def crop_frame(frame, args):
 	if args.speaker == "chem":
 		return frame
-	elif args.speaker == "agad":
+	elif args.speaker == "chess":
 		return frame[270:460, 770:1130]
 	elif args.speaker == "hs" or args.speaker == "mk" or args.speaker == "eh":
 		return  frame[int(frame.shape[0]*3/4):, int(frame.shape[1]*3/4): ]
