@@ -81,7 +81,7 @@ Generating for the given test split
 ----------
 ```bash
 python complete_test_generate.py -d Dataset/chem -r Dataset/chem/test_results \
---preset synthesizer/prests/chem.json --checkpoint <path_to_checkpoint>
+--preset synthesizer/presets/chem.json --checkpoint <path_to_checkpoint>
 
 #A sample checkpoint_path  can be found in hparams.py alongside the "eval_ckpt" param.
 ```
@@ -105,7 +105,7 @@ python score.py -r Dataset/chem/test_results
 Training
 ----------
 ```bash
-python train.py <name_of_run> --data_root Dataset/chem/ --preset synthesizer/prests/chem.json
+python train.py <name_of_run> --data_root Dataset/chem/ --preset synthesizer/presets/chem.json
 ```
 Additional arguments can also be set or passed through `--hparams`, for details: `python train.py -h`
 
