@@ -47,7 +47,7 @@ The dataset is present in the Dataset folder in this repository. The folder `Dat
 ```
 data_root (Lip2Wav in the below examples)
 ├── Dataset
-|	├── agad, chem, hs (list of speaker-specific folders)
+|	├── chess, chem, hs (list of speaker-specific folders)
 |	|    ├── train.txt, test.txt, val.txt (each will contain YouTube IDs to download)
 ```
 
