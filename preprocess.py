@@ -35,13 +35,15 @@ fa = [face_detection.FaceAlignment(face_detection.LandmarksType._2D, flip_input=
 									device='cuda:{}'.format(id)) for id in range(args.ngpu)]
 
 template = 'ffmpeg -loglevel panic -y -i {} -ar {} -f wav {}'
+template2 = 'ffmpeg -hide_banner -loglevel panic -threads 1 -y -i {} -async 1 -ac 1 -vn -acodec pcm_s16le -ar 16000 {}'
+
 
 def crop_frame(frame, args):
-	if args.speaker == "chem":
+	if args.speaker == "chem" or args.speaker == "hs":
 		return frame
 	elif args.speaker == "chess":
 		return frame[270:460, 770:1130]
-	elif args.speaker == "hs" or args.speaker == "dl" or args.speaker == "eh":
+	elif args.speaker == "dl" or args.speaker == "eh":
 		return  frame[int(frame.shape[0]*3/4):, int(frame.shape[1]*3/4): ]
 	else:
 		raise ValueError("Unknown speaker!")
@@ -69,7 +71,12 @@ def process_video_file(vfile, args, gpu_id):
 	wavpath = path.join(fulldir, 'audio.wav')
 	specpath = path.join(fulldir, 'mels.npz')
 
-	command = template.format(vfile, hp.sample_rate, wavpath)
+	if args.speaker == "hs" or args.speaker == "eh"
+		command = template2.format(vfile, wavpath)
+	else:
+		command = template.format(vfile, hp.sample_rate, wavpath)
+
+
 	subprocess.call(command, shell=True)
 
 	batches = [frames[i:i + args.batch_size] for i in range(0, len(frames), args.batch_size)]
