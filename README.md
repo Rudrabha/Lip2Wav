@@ -116,12 +116,12 @@ License and Citation
 ----------
 The software is licensed under the MIT License. Please cite the following paper if you have use this code:
 ```
-@article{Prajwal2020LearningIS,
-  title={Learning Individual Speaking Styles for Accurate Lip to Speech Synthesis},
-  author={K R Prajwal and Rudrabha Mukhopadhyay and Vinay Namboodiri and C. V. Jawahar},
-  journal={ArXiv},
-  year={2020},
-  volume={abs/2005.08209}
+@InProceedings{Prajwal_2020_CVPR,
+author = {Prajwal, K R and Mukhopadhyay, Rudrabha and Namboodiri, Vinay P. and Jawahar, C.V.},
+title = {Learning Individual Speaking Styles for Accurate Lip to Speech Synthesis},
+booktitle = {The IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+month = {June},
+year = {2020}
 }
 ```
 
