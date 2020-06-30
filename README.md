@@ -26,7 +26,7 @@ Prerequisites
 
 Getting the weights
 ----------
-Download our model weights [to be updated](#)
+Download our model weights [to be updated](https://iiitaphyd-my.sharepoint.com/:f:/g/personal/radrabha_m_research_iiit_ac_in/EthnCzjwac1NtsVvQv64MK4BB3PxvQE9KMkbrNUAj9rYzA?e=BAR0qh)
 
 
 Preprocessing the LRW dataset
