@@ -68,16 +68,15 @@ data_root (lrw_preprocessed/ in the above example)
 Generating for the given test split
 ----------
 ```bash
-python complete_test_generate.py -d Dataset/chem -r Dataset/chem/test_results \
---preset synthesizer/presets/chem.json --checkpoint <path_to_checkpoint>
+python complete_test_generate.py -d lrw_preprocessed/ -r lrw_test_results/ --checkpoint <path_to_checkpoint>
 
 #A sample checkpoint_path  can be found in hparams.py alongside the "eval_ckpt" param.
 ```
 
 This will create:
 ```
-Dataset/chem/test_results
-├── gts/  (cropped ground-truth audio files)
+lrw_test_results/
+├── gts/  (ground-truth audio files)
 |	├── *.wav
 ├── wavs/ (generated audio files)
 |	├── *.wav
@@ -87,13 +86,13 @@ Calculating the metrics
 ----------
 You can calculate the `PESQ`, `ESTOI` and `STOI` scores for the above generated results using `score.py`:
 ```bash
-python score.py -r Dataset/chem/test_results
+python score.py -r lrw_test_results/
 ```
 
 Training
 ----------
 ```bash
-python train.py <name_of_run> --data_root Dataset/chem/ --preset synthesizer/presets/chem.json
+python train.py <name_of_run> --data_root Dataset/chem/
 ```
 Additional arguments can also be set or passed through `--hparams`, for details: `python train.py -h`
 
