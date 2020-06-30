@@ -1,7 +1,7 @@
 import synthesizer
 from synthesizer import inference as sif
 import numpy as np
-import sys, cv2, os, pickle, argparse, subprocess
+import sys, cv2, os, pickle, argparse
 from tqdm import tqdm
 from shutil import copy
 from glob import glob
@@ -28,99 +28,73 @@ class Generator(object):
 
 	def vc(self, sample, outfile):
 		hp = sif.hparams
-		images = sample['images']
-		all_windows = []
-		i = 0
-		while i + hp.T <= len(images):
-			all_windows.append(images[i : i + hp.T])
-			i += hp.T - hp.overlap
+		id_windows = [range(i, i + hp.T) for i in range(0, (sample['till'] // hp.T) * hp.T, 
+					hp.T - hp.overlap) if (i + hp.T <= (sample['till'] // hp.T) * hp.T)]
+
+		all_windows = [[sample['folder'].format(id) for id in window] for window in id_windows]
+		last_segment = [sample['folder'].format(id) for id in range(sample['till'])][-hp.T:]
+		all_windows.append(last_segment)
+
+		ref = np.load(os.path.join(os.path.dirname(sample['folder']), 'ref.npz'))['ref'][0]
+		ref = np.expand_dims(ref, 0)
 
 		for window_idx, window_fnames in enumerate(all_windows):
 			images = self.read_window(window_fnames)
 
-			s = self.synthesizer.synthesize_spectrograms(images)[0]
+			s = self.synthesizer.synthesize_spectrograms(images, ref)[0]
 			if window_idx == 0:
 				mel = s
+			elif window_idx == len(all_windows) - 1:
+				remaining = ((sample['till'] - id_windows[-1][-1] + 1) // 5) * 16
+				if remaining == 0:
+					continue
+				mel = np.concatenate((mel, s[:, -remaining:]), axis=1)
 			else:
 				mel = np.concatenate((mel, s[:, hp.mel_overlap:]), axis=1)
 			
 		wav = self.synthesizer.griffin_lim(mel)
 		sif.audio.save_wav(wav, outfile, sr=hp.sample_rate)
 
-
-def get_image_list(split, data_root):
-	filelist = []
-	with open(os.path.join(data_root, '{}.txt'.format(split))) as vidlist:
-		for vid_id in vidlist:
-			vid_id = vid_id.strip()
-			filelist.extend(list(glob(os.path.join(data_root, 'preprocessed', vid_id, '*/*.jpg'))))
-	return filelist
-
-
-def get_testlist(data_root):
-	test_images = get_image_list('test', data_root)
-	print('{} hours is available for testing'.format(len(test_images) / (sif.hparams.fps * 3600.)))
+def get_vidlist(data_root):
+	test = synthesizer.hparams.get_image_list('test', data_root)
 	test_vids = {}
-	for x in test_images:
+	for x in test:
 		x = x[:x.rfind('/')]
+		if len(os.listdir(x)) < 30: continue
 		test_vids[x] = True
 	return list(test_vids.keys())
 
-def to_sec(idx):
-	frame_id = idx + 1
-	sec = frame_id / float(sif.hparams.fps)
-	return sec
+def complete(folder):
+	# first check if ref file present
+	if not os.path.exists(os.path.join(folder, 'ref.npz')):
+		return False
 
-def contiguous_window_generator(vidpath):
-	frames = glob(os.path.join(vidpath, '*.jpg'))
-	if len(frames) < sif.hparams.T: return
-
+	frames = glob(os.path.join(folder, '*.jpg'))
 	ids = [int(os.path.splitext(os.path.basename(f))[0]) for f in frames]
 	sortedids = sorted(ids)
-	end_idx = 0
-	start = sortedids[end_idx]
-
-	while end_idx < len(sortedids):
-		while end_idx < len(sortedids):
-			if end_idx == len(sortedids) - 1:
-				if sortedids[end_idx] + 1 - start >= sif.hparams.T: 
-					yield ((to_sec(start), to_sec(sortedids[end_idx])), 
-					[os.path.join(vidpath, '{}.jpg'.format(x)) for x in range(start, sortedids[end_idx] + 1)])
-				return
-			else:
-				if sortedids[end_idx] + 1 == sortedids[end_idx + 1]:
-					end_idx += 1
-				else:
-					if sortedids[end_idx] + 1 - start >= sif.hparams.T: 
-						yield ((to_sec(start), to_sec(sortedids[end_idx])), 
-						[os.path.join(vidpath, '{}.jpg'.format(x)) for x in range(start, sortedids[end_idx] + 1)])
-					break
-		
-		end_idx += 1
-		start = sortedids[end_idx]
+	if sortedids[0] != 0: return False
+	for i, s in enumerate(sortedids):
+		if i != s:
+			return False
+	return True
 
 if __name__ == '__main__':
 	parser = argparse.ArgumentParser()
 	parser.add_argument('-d', "--data_root", help="Speaker folder path", required=True)
 	parser.add_argument('-r', "--results_root", help="Speaker folder path", required=True)
 	parser.add_argument('--checkpoint', help="Path to trained checkpoint", required=True)
-	parser.add_argument("--preset", help="Speaker-specific hyper-params", type=str, required=True)
 	args = parser.parse_args()
 
-
-	## add speaker-specific parameters
-	with open(args.preset) as f:
-		sif.hparams.parse_json(f.read())
-
 	sif.hparams.set_hparam('eval_ckpt', args.checkpoint)
-	
-	videos = get_testlist(args.data_root)
 
-	if not os.path.isdir(args.results_root):
-		os.mkdir(args.results_root)
+	videos = get_vidlist(args.data_root)
 
-	GTS_ROOT = os.path.join(args.results_root, 'gts/')
-	WAVS_ROOT = os.path.join(args.results_root, 'wavs/')
+	RESULTS_ROOT = args.results_root
+	if not os.path.isdir(RESULTS_ROOT):
+		os.mkdir(RESULTS_ROOT)
+
+	GTS_ROOT = os.path.join(RESULTS_ROOT, 'gts/')
+	WAVS_ROOT = os.path.join(RESULTS_ROOT, 'wavs/')
 	files_to_delete = []
 	if not os.path.isdir(GTS_ROOT):
 		os.mkdir(GTS_ROOT)
@@ -132,25 +106,22 @@ if __name__ == '__main__':
 		files_to_delete.extend(list(glob(WAVS_ROOT + '*')))
 	for f in files_to_delete: os.remove(f)
 
+	hp = sif.hparams
 	g = Generator()
-	template = 'ffmpeg -y -loglevel panic -ss {} -i {} -to {} -strict -2 {}'
 	for vid in tqdm(videos):
+		if not complete(vid):
+			continue
+
+		sample = {}
 		vidpath = vid + '/'
-		for (ss, es), images in tqdm(contiguous_window_generator(vidpath)):
-			sample = {}
-			sample['images'] = images
 
-			vidname = vid.split('/')[-2] + '_' + vid.split('/')[-1]
-			outfile = '{}{}_{}:{}.wav'.format(WAVS_ROOT, vidname, ss, es)
-			try:
-				g.vc(sample, outfile)
-			except KeyboardInterrupt:
-				exit(0)
-			except Exception as e:
-				print(e)
-				continue
+		sample['folder'] = vidpath + '{}.jpg'
 
-			command = template.format(ss, vidpath + 'audio.wav', es, 
-									'{}{}_{}:{}.wav'.format(GTS_ROOT, vidname, ss, es))
+		images = glob(vidpath + '*.jpg')
+		sample['till'] = (len(images) // 5) * 5
 
-			subprocess.call(command, shell=True)
+		vidname = vid.split('/')[-2] + '_' + vid.split('/')[-1]
+		outfile = WAVS_ROOT + vidname + '.wav'
+		g.vc(sample, outfile)
+
+		copy(vidpath + 'audio.wav', GTS_ROOT + vidname + '.wav')

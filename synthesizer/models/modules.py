@@ -212,13 +212,12 @@ class EncoderConvolutions3D:
         
         self.activation = activation
         self.scope = "enc_conv_layers" if scope is None else scope
-        self.enc_conv_num_blocks = hparams.enc_conv_num_blocks
-        self.c = hparams.num_init_filters
+        self.enc_conv_num_blocks = 5
     
     def __call__(self, inputs):
         with tf.variable_scope(self.scope):
             x = inputs
-            c = self.c
+            c = 32
 
             for i in range(self.enc_conv_num_blocks):
                 x = self.conv3d(x, (5 if i == 0 else 3), c, (1, 2, 2), self.activation,
@@ -228,7 +227,7 @@ class EncoderConvolutions3D:
                             "conv_layer_{}_{}_".format(i + 1, j + 1) + self.scope, residual=True)
                 
                 if i == self.enc_conv_num_blocks - 1:
-                    x = self.conv3d(x, 3, c, (1, 3, 3), self.activation, self.is_training, 
+                    x = self.conv3d(x, 3, c, (1, 4, 4), self.activation, self.is_training, 
                             "conv_layer_{}_{}_".format(i + 1, 'last') + self.scope)
 
                 c *= 2

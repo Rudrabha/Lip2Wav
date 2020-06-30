@@ -61,7 +61,7 @@ class Synthesizer:
         tf.reset_default_graph()
         self._model = Tacotron2(None, hparams)
             
-    def synthesize_spectrograms(self, faces, return_alignments=False):
+    def synthesize_spectrograms(self, faces, embeddings, return_alignments=False):
         """
         Synthesizes mel spectrograms from texts and speaker embeddings.
 
@@ -75,7 +75,7 @@ class Synthesizer:
         """
         if not self.is_loaded():
             self.load()
-        specs, alignments = self._model.my_synthesize(faces)
+        specs, alignments = self._model.my_synthesize(faces, embeddings)
         
         return (specs, alignments) if return_alignments else specs
 

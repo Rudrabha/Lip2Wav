@@ -7,19 +7,10 @@
   <img src="images/banner.gif"/></p>
 
 ----------
-Recent Updates
-----------
-- Dataset and Pretrained model for "Chemistry lectures" speaker is released!
-- Dataset and Pretrained model for "Chess commentary" speaker is released!
-- Dataset and Pretrained model for "Deep-learning lectures" speaker is released!
-- Multi-speaker Lip2Wav model trained on LRW dataset will be released soon! Stay tuned!
-
-----------
 Highlights
 ----------
  - First work to generate intelligible speech from only lip movements in unconstrained settings.
- - Sequence-to-Sequence modelling of the problem.
- - Dataset for 5 speakers containing 100+ hrs of video data made available! [[Dataset folder of this repo]](https://github.com/Rudrabha/Lip2Wav/tree/master/Dataset) 
+ - First Multi-speaker Lip to Speech Generation Results
  - Complete training code and pretrained models made available.
  - Inference code to generate results from the pre-trained models.
  - Code to calculate metrics reported in the paper is also made available.
@@ -31,52 +22,47 @@ Prerequisites
 - ffmpeg: `sudo apt-get install ffmpeg`
 - Install necessary packages using `pip install -r requirements.txt`
 - Face detection [pre-trained model](https://www.adrianbulat.com/downloads/python-fan/s3fd-619a316812.pth) should be downloaded to `face_detection/detection/sfd/s3fd.pth`
+- Speaker Embeddings pre-trained model at this [link](https://drive.google.com/file/d/1n1sPXvT34yXFLT47QZA6FIRGrwMeSsZc/view) should be downloaded (navigate to `encoder/saved_models/pretrained.pt`) to `encoder/saved_models/pretrained.pt`.
 
 Getting the weights
 ----------
-| Speaker  | Link to the model |
-| :-------------: | :---------------: |
-| Chemistry Lectures  | [Link](https://iiitaphyd-my.sharepoint.com/:f:/g/personal/radrabha_m_research_iiit_ac_in/EgQbOxQI5UBDg3Atmobk834BgMaJBQqeEIvJMu-t7x0sOQ?e=qAYkG1)  |
-| Chess Commentary  | [Link](https://iiitaphyd-my.sharepoint.com/:f:/g/personal/radrabha_m_research_iiit_ac_in/EsvTmlPa6ddLq7IE6s-WcAcBGQEL2UvMrXnoKIVCXcHcZg?e=41KJvA)  |
-| Deep-learning Lectures  | [Link](https://iiitaphyd-my.sharepoint.com/:f:/g/personal/radrabha_m_research_iiit_ac_in/Em8SFMi6YcdIjtnNJmG_UEcBsdT4PqvYUAwFilNmtqOQ1A?e=E7hMG2)  |
+Download our model weights [to be updated](#)
 
-Downloading the dataset
+
+Preprocessing the LRW dataset
 ----------
-
-<!--If you would like to train/test on our Lip2Wav dataset, download it from our [project page](http://cvit.iiit.ac.in/research/projects/cvit-projects/speaking-by-observing-lip-movements). The download will be a small zip file with several `.csv` files containing the YouTube IDs of the videos to create the dataset for each speaker. Assuming the zip file is extracted as follows:-->
-The dataset is present in the Dataset folder in this repository. The folder `Dataset/chem` contains `.txt` files for the train, val and test sets.
+The LRW dataset is organized as follows.
 
 ```
-data_root (Lip2Wav in the below examples)
-├── Dataset
-|	├── chess, chem, dl (list of speaker-specific folders)
-|	|    ├── train.txt, test.txt, val.txt (each will contain YouTube IDs to download)
+data_root (lrw/ in the below examples)
+├── word1
+|	├── train, val, test (3 splits)
+|	|    ├── *.mp4, *.txt
+├── word2
+|	├── ...
+├── ...
 ```
 
-To download the complete video data for a specific speaker, just run:
 
 ```bash
-sh download_speaker.sh Dataset/chem
+python preprocess.py --data_root lrw/ --preprocessed_root lrw_preprocessed/ --split test
+
+# dump speaker embeddings in the same preprocessed folder
+python preprocess_speakers.py --preprocessed_root lrw_preprocessed/
 ```
 
-This should create
+Additional options like `batch_size` and number of GPUs, `split` to use can also be set. You should get:
 
 ```
-Dataset
-├── chem (or any other speaker-specific folder)
-|	├── train.txt, test.txt, val.txt
-|	├── videos/		(will contain the full videos)
-|	├── intervals/	(cropped 30s segments of all the videos) 
+data_root (lrw_preprocessed/ in the above example)
+├── word1
+|	├── train, val, test (preprocessed splits)
+|	|    ├── word1_00001, word1_00002...
+|	|    |    ├── *.jpg, mels.npz, ref.npz 
+├── word2
+|	├── ...
+├── ...
 ```
-
-
-Preprocessing the dataset
-----------
-```bash
-python preprocess.py --speaker_root Dataset/chem --speaker chem
-```
-
-Additional options like `batch_size` and number of GPUs to use can also be set.
 
 
 Generating for the given test split

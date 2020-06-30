@@ -76,7 +76,7 @@ class Tacotron2:
         saver.restore(self.session, hparams.eval_ckpt)
         print ("LOADED MODEL")
     
-    def my_synthesize(self, seqs):
+    def my_synthesize(self, seqs, speaker_embeddings):
         """
         Lighter synthesis function that directly returns the mel spectrograms.
         """
@@ -89,7 +89,7 @@ class Tacotron2:
         feed_dict = {
             self.inputs: input_seqs,
             self.input_lengths: np.asarray(input_lengths, dtype=np.int32),
-            self.speaker_embeddings:np.zeros([1,256], dtype=np.float32),
+            self.speaker_embeddings: speaker_embeddings,
             self.split_infos: np.asarray(split_infos, dtype=np.int32),
         }
         

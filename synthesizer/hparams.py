@@ -3,11 +3,11 @@ from glob import glob
 import os, pickle
 
 def get_image_list(split, data_root):
-    filelist = []   
-    with open(os.path.join(data_root, '{}.txt'.format(split))) as vidlist:
-        for vid_id in vidlist:
-            vid_id = vid_id.strip()
-            filelist.extend(list(glob(os.path.join(data_root, 'preprocessed', vid_id, '*/*.jpg'))))   
+    assert split in ['test', 'val', 'train']
+    filelist = list(glob(os.path.join(data_root, '*/{}/*/*.jpg'.format(split))))
+
+    print('Test filelist contains {} images'.format(len(filelist)))
+    
     return filelist
 
 # Default hyperparameters
@@ -186,9 +186,7 @@ hparams = HParams(
     #enc_conv_kernel_size=(5,),  # size of encoder convolution filters for each layer
     enc_conv_kernel_size = [5,3,3],
     enc_conv_channels=32,  # number of encoder convolutions filters for each layer
-    encoder_lstm_units=384,  # number of lstm units for each direction (forward and backward)
-    enc_conv_num_blocks=5,
-    num_init_filters=24,
+    encoder_lstm_units=256,  # number of lstm units for each direction (forward and backward)
     
     # Attention mechanism
     smoothing=False,  # Whether to smooth the attention normalization function
@@ -203,7 +201,7 @@ hparams = HParams(
     prenet_layers=[256, 256],  # number of layers and number of units of prenet
     decoder_layers=2,  # number of decoder lstm layers
     decoder_lstm_units=1024,  # number of decoder lstm units on each layer
-    max_iters=120,
+    max_iters=40,
     # Max decoder steps during inference (Just for safety from infinite loop cases)
     
     # Residual postnet
@@ -253,7 +251,7 @@ hparams = HParams(
     # major slowdowns! Only use when critical!)
     
     # train/test split ratios, mini-batches sizes
-    tacotron_batch_size=24,  # number of training samples on each training steps
+    tacotron_batch_size=32,  # number of training samples on each training steps
     # Tacotron Batch synthesis supports ~16x the training batch size (no gradients during 
     # testing). 
     # Training Tacotron with unmasked paddings makes it aware of them, which makes synthesis times
@@ -300,7 +298,7 @@ hparams = HParams(
     # The second approach is inspired by:
     # Bengio et al. 2015: Scheduled Sampling for Sequence Prediction with Recurrent Neural Networks.
     # Can be found under: https://arxiv.org/pdf/1506.03099.pdf
-    tacotron_teacher_forcing_mode="scheduled",
+    tacotron_teacher_forcing_mode="constant",
     # Can be ("constant" or "scheduled"). "scheduled" mode applies a cosine teacher forcing ratio 
     # decay. (Preference: scheduled)
     tacotron_teacher_forcing_ratio=1.,
@@ -331,15 +329,14 @@ hparams = HParams(
 
 
     ###Speech synthesis from lips###
-    eval_ckpt="synthesizer/saved_models/logs-final/taco_pretrained/tacotron_model.ckpt-159000",
+    eval_ckpt="../tacotron_model.ckpt-313000",
     
-    speaker="unset",
-    T=90,
-    overlap=15,
-    mel_overlap=40,
-    mel_step_size=240,
-    img_size=96,
-    fps=30,
+    T=25,
+    overlap=10,
+    mel_overlap=32,
+    mel_step_size=80,
+    img_size=128,
+    fps=25,
 )
 
 

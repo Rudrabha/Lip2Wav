@@ -21,11 +21,12 @@ total_pesq = 0
 total_stoi = 0
 total_estoi = 0
 
-for filename in tqdm(all_files):
+prog_bar = tqdm(all_files)
+
+for i, filename in enumerate(prog_bar):
 	gt_filename = gt_folder.format(os.path.basename(filename))
 	rate, deg = wavfile.read(filename)
 	rate, ref = wavfile.read(gt_filename)
-	if len(ref.shape) > 1: ref = np.mean(ref, axis=1) #raise ValueError('Audio should be a mono band')
 
 	if rate != sr:
 		ref = librosa.resample(ref.astype(np.float32), rate, sr).astype(np.int16)
@@ -40,6 +41,10 @@ for filename in tqdm(all_files):
 	total_pesq += pesq(rate, x, deg, 'nb')
 	total_stoi += stoi(x, deg, rate, extended=False)
 	total_estoi += stoi(x, deg, rate, extended=True)
+
+	prog_bar.set_description('PESQ: {}, STOI: {}, ESTOI: {}'.format(total_pesq / (i + 1),
+																	total_stoi / (i + 1),
+																	total_estoi / (i + 1)))
 
 print('Mean PESQ: {}'.format(total_pesq / len(all_files)))
 print('Mean STOI: {}'.format(total_stoi / len(all_files)))
