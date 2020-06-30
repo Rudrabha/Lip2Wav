@@ -4,7 +4,7 @@
 
 [[Paper]](https://arxiv.org/abs/2005.08209) | [[Project Page]](http://cvit.iiit.ac.in/research/projects/cvit-projects/speaking-by-observing-lip-movements) | [[Demo Video]](https://www.youtube.com/watch?v=HziA-jmlk_4)
  <p align="center">
-  <img src="images/banner.gif"/></p>
+  <img src="images/multispeaker.gif"/></p>
 
 ----------
 Highlights
