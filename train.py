@@ -15,8 +15,8 @@ def prepare_run(args):
     run_name = args.name
     log_dir = os.path.join(args.models_dir, "logs-{}".format(run_name))
     os.makedirs(log_dir, exist_ok=True)
-    all_images = get_image_list('train', args.data_root)
-    all_test_images = get_image_list('val', args.data_root)
+    all_images = get_image_list('test', args.data_root)
+    all_test_images = get_image_list('test', args.data_root)
 
     hparams.add_hparam('all_images', all_images)
     hparams.add_hparam('all_test_images', all_test_images)
@@ -30,7 +30,6 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("name", help="Name of the run and of the logging directory.")
     parser.add_argument("--data_root", help="Speaker folder path", required=True)
-    parser.add_argument("--preset", help="Speaker-specific hyper-params", type=str, required=True)
 
     parser.add_argument("-m", "--models_dir", type=str, default="synthesizer/saved_models/", help=\
         "Path to the output directory that will contain the saved model weights and the logs.")
@@ -59,8 +58,5 @@ if __name__ == "__main__":
     print_args(args, parser)
     
     log_dir, hparams = prepare_run(args)
-    
-    with open(args.preset) as f:
-        hparams.parse_json(f.read())
 
     tacotron_train(args, log_dir, hparams)

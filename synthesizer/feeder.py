@@ -160,12 +160,19 @@ class Feeder:
 			idx = np.random.randint(len(self.filelist[split]))
 
 			img_name = self.filelist[split][idx]
+
+			if not os.path.isfile(os.path.join(os.path.dirname(img_name), 'mels.npz')):
+				continue
+
+			if not os.path.isfile(os.path.join(os.path.dirname(img_name), 'ref.npz')):
+				continue
+
 			window_fnames = self.get_window(img_name)
 			if window_fnames is None:
 				idx = np.random.randint(len(self.filelist[split]))
 				continue
 
-			mel = np.load(os.path.join(os.path.dirname(img_name), 'mels.npz'))['spec'].T
+			mel = np.load(os.path.join(os.path.dirname(img_name), 'mels.npz'))['mel'].T
 			mel = self.crop_audio_window(mel, img_name)
 			if (mel.shape[0] != self._hparams.mel_step_size):
 				idx = np.random.randint(len(self.filelist[split]))
@@ -182,14 +189,18 @@ class Feeder:
 
 			window.append(img)
 		x = np.asarray(window) / 255.
-		return x, mel
+
+		## speaker embedding
+		refs = np.load(os.path.join(os.path.dirname(img_name), 'ref.npz'))['ref']
+		ref = refs[np.random.choice(len(refs))]
+
+		return x, mel, ref
 
 	def _get_next_example(self):
 		"""Gets a single example (input, mel_target, token_target, linear_target, mel_length) from_ disk
 		"""
-		input_data, mel_target = self.getitem()
+		input_data, mel_target, embed_target = self.getitem()
 
-		embed_target = np.zeros([256], dtype=np.float32)
 		#return input_data, mel_target, token_target, embed_target, len(mel_target)
 		return input_data, mel_target, embed_target, len(mel_target)
 	
