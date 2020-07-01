@@ -37,6 +37,7 @@ Getting the weights
 | :-------------: | :---------------: |
 | Chemistry Lectures  | [Link](https://iiitaphyd-my.sharepoint.com/:f:/g/personal/radrabha_m_research_iiit_ac_in/EgQbOxQI5UBDg3Atmobk834BgMaJBQqeEIvJMu-t7x0sOQ?e=qAYkG1)  |
 | Chess Commentary  | [Link](https://iiitaphyd-my.sharepoint.com/:f:/g/personal/radrabha_m_research_iiit_ac_in/EsvTmlPa6ddLq7IE6s-WcAcBGQEL2UvMrXnoKIVCXcHcZg?e=41KJvA)  |
+| Hardware-security Lectures  | [Link](https://iiitaphyd-my.sharepoint.com/:f:/g/personal/radrabha_m_research_iiit_ac_in/EhJ1YHZ18zJKgsEHzg1umbIBKRNdhbkqp54oQwuaqrBtEA?e=gw6f0y)  |
 | Deep-learning Lectures  | [Link](https://iiitaphyd-my.sharepoint.com/:f:/g/personal/radrabha_m_research_iiit_ac_in/Em8SFMi6YcdIjtnNJmG_UEcBsdT4PqvYUAwFilNmtqOQ1A?e=E7hMG2)  |
 
 Downloading the dataset
