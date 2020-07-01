@@ -9,9 +9,9 @@
 ----------
 Recent Updates
 ----------
-- Dataset and Pre-trained models for "Chemistry lectures", "Chess commentary", "Deep-learning lectures" speakers released!
+- Dataset and Pre-trained models for "Chemistry lectures", "Chess commentary", "Deep-learning lectures", "Hardware-security lectures" speakers released!
 - Pre-trained model for multi-speaker word-level Lip2Wav model trained on the LRW dataset is released! ([multispeaker](https://github.com/Rudrabha/Lip2Wav/tree/multispeaker) branch)
-- Dataset and Pre-trained models for two more speakers will be released soon! Stay tuned!
+- Dataset and Pre-trained models for one more speaker will be released soon! Stay tuned!
 
 ----------
 Highlights
