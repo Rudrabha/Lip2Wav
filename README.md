@@ -9,9 +9,9 @@
 ----------
 Recent Updates
 ----------
-- Dataset and Pre-trained models for "Chemistry lectures", "Chess commentary", "Deep-learning lectures", "Hardware-security lectures" speakers released!
+- Dataset and Pre-trained models for all speakers are released!
 - Pre-trained model for multi-speaker word-level Lip2Wav model trained on the LRW dataset is released! ([multispeaker](https://github.com/Rudrabha/Lip2Wav/tree/multispeaker) branch)
-- Dataset and Pre-trained models for one more speaker will be released soon! Stay tuned!
+
 
 ----------
 Highlights
@@ -39,6 +39,8 @@ Getting the weights
 | Chess Commentary  | [Link](https://iiitaphyd-my.sharepoint.com/:f:/g/personal/radrabha_m_research_iiit_ac_in/EsvTmlPa6ddLq7IE6s-WcAcBGQEL2UvMrXnoKIVCXcHcZg?e=41KJvA)  |
 | Hardware-security Lectures  | [Link](https://iiitaphyd-my.sharepoint.com/:f:/g/personal/radrabha_m_research_iiit_ac_in/EhJ1YHZ18zJKgsEHzg1umbIBKRNdhbkqp54oQwuaqrBtEA?e=gw6f0y)  |
 | Deep-learning Lectures  | [Link](https://iiitaphyd-my.sharepoint.com/:f:/g/personal/radrabha_m_research_iiit_ac_in/Em8SFMi6YcdIjtnNJmG_UEcBsdT4PqvYUAwFilNmtqOQ1A?e=E7hMG2)  |
+| Ethical Hacking Lectures  | [Link](https://iiitaphyd-my.sharepoint.com/:f:/g/personal/radrabha_m_research_iiit_ac_in/Ej18WzVpzTtAvPu1HbnhVAMB7tKqqMVwdYJ5A3aYoDhtWw?e=FCvtR9)  |
+
 
 Downloading the dataset
 ----------
