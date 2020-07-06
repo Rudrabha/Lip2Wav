@@ -6,7 +6,7 @@ lws==1.2.6
 Markdown==3.1.1
 matplotlib==3.1.1
 multiprocess
-numba
+numba==0.48
 numpy==1.16.4
 opencv-python==4.1.1.26
 pesq==0.0.1

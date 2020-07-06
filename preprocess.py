@@ -6,7 +6,7 @@ if sys.version_info[0] < 3 and sys.version_info[1] < 2:
 from os import listdir, path
 
 if not path.isfile('face_detection/detection/sfd/s3fd.pth'):
-	raise FileNotFoundError('Save the s3fd model to face_detection/sfd/s3fd.pth \
+	raise FileNotFoundError('Save the s3fd model to face_detection/detection/sfd/s3fd.pth \
 							before running this script!')
 
 import multiprocessing as mp
@@ -71,7 +71,7 @@ def process_video_file(vfile, args, gpu_id):
 	wavpath = path.join(fulldir, 'audio.wav')
 	specpath = path.join(fulldir, 'mels.npz')
 
-	if args.speaker == "hs" or args.speaker == "eh"
+	if args.speaker == "hs" or args.speaker == "eh":
 		command = template2.format(vfile, wavpath)
 	else:
 		command = template.format(vfile, hp.sample_rate, wavpath)
