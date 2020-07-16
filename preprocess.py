@@ -60,7 +60,7 @@ def process_video_file(vfile, args, gpu_id):
 	wavpath = path.join(fulldir, 'audio.wav')
 	specpath = path.join(fulldir, 'mels.npz')
 
-	command = template2.format(vfile, hp.sample_rate, wavpath)
+	command = template2.format(vfile, wavpath)
 	subprocess.call(command, shell=True)
 
 	batches = [frames[i:i + args.batch_size] for i in range(0, len(frames), args.batch_size)]
