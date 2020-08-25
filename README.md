@@ -15,6 +15,8 @@ Highlights
  - Inference code to generate results from the pre-trained models.
  - Code to calculate metrics reported in the paper is also made available.
 
+### You might also be interested in:
+:tada: Lip-sync talking face videos to any speech using Wav2Lip: https://github.com/Rudrabha/Wav2Lip
 
 Prerequisites
 -------------
