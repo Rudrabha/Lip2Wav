@@ -164,6 +164,9 @@ class Feeder:
 			if window_fnames is None:
 				idx = np.random.randint(len(self.filelist[split]))
 				continue
+			if len(window_fnames) != self._hparams.T :
+				idx = np.random.randint(len(self.filelist[split]))
+				continue
 
 			mel = np.load(os.path.join(os.path.dirname(img_name), 'mels.npz'))['spec'].T
 			mel = self.crop_audio_window(mel, img_name)
